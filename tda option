@@ -1,0 +1,13 @@
+ver-code-option([A|_]):-
+    A.
+
+option(CODE, MESSAGE, CODELINK, FLOWCODELINK, KEYWORDS, OPTION):-
+    OPTION = [CODE, MESSAGE, CODELINK, FLOWCODELINK, KEYWORDS, OPTION],
+    call(ver-code-option,OPTION).
+
+
+%no-repetido([A|B]):-
+
+
+flow(Id, Name-msg, Option, Flow):-
+    Flow = [Id, Name-msg, Option, Flow].

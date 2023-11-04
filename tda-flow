@@ -1,48 +1,51 @@
 :- include("tda-option").
 
-igualdad(_,[],LR):-
-    LR.
+carP([A|_],A).
 
-igualdad(A, [B|C], LR):-
-    getcodeOpt(B,B1),
-    not(A is B1),
-    igualdad(A, C, L2),
-    LR = [B, L2].
+my_append([], L, L).
 
-igualdad(A, [_|C], LR):-
-    igualdad(A, C, LR).
+my_append([A|B],L2,[A|R]):-
+    my_append(B, L2,R).
+
+my_append(A,L2,[A|R]):-
+    my_append([], L2,R).
 
 
-verificarOpt2([],[]):-!.
+revisar(_,[],_):-
+    !.
 
-verificarOpt2([], LR):-
-    LR.
-
-verificarOpt2([A|B], LR):-
+revisar(Code,[A],A):-
     getcodeOpt(A, A1),
-    igualdad(A1, B, L2),
-    LR = [A, L2].
+    number(A1),
+    not(Code = A1).
 
-verificarOpt2([_|B],LR):-
-    verificarOpt2(B, LR).
+revisar(Code, [A|B], LR):-
+    getcodeOpt(A, A1),
+    number(A1),
+    not(B = LR),
+    not(Code = A1),
+    my_append(LR, A, L2),
+    revisar(Code, B, L2).
 
-verificarOpt(_,Length,LR):-
-    Length = 0,
-    LR = [].
+revisar(Code, [_|B], LR):-
+    revisar(Code,B,LR).
 
-verificarOpt(Opt,Length,_):-
-    Length = 1,
-    Opt.
 
-verificarOpt(A,Length,LR):-
-    Length >= 2,
-    verificarOpt2(A,LR),
-    LR.
+verificarOpt([],[]).
 
+verificarOpt([A],[A]).
+
+verificarOpt([A|B],[A|R]):-
+    getcodeOpt(A,A1),
+    revisar(A1, B, L2),
+    verificarOpt(L2,R).
+
+
+getIfFlow([A|_],A).
+getNamemsg([_,B|_],B).
+getOptionsFlow([_,_,C], C).
 
 flow(Id, Namemsg, Option, Flow):-
-    length(Option,L),
-    verificarOpt(Option,L,LR),
-    write(LR),
+    verificarOpt(Option,LR),
     Flow = [Id, Namemsg, LR].
 

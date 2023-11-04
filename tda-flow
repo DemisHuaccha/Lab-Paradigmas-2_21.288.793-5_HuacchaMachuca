@@ -1,0 +1,48 @@
+:- include("tda-option").
+
+igualdad(_,[],LR):-
+    LR.
+
+igualdad(A, [B|C], LR):-
+    getcodeOpt(B,B1),
+    not(A is B1),
+    igualdad(A, C, L2),
+    LR = [B, L2].
+
+igualdad(A, [_|C], LR):-
+    igualdad(A, C, LR).
+
+
+verificarOpt2([],[]):-!.
+
+verificarOpt2([], LR):-
+    LR.
+
+verificarOpt2([A|B], LR):-
+    getcodeOpt(A, A1),
+    igualdad(A1, B, L2),
+    LR = [A, L2].
+
+verificarOpt2([_|B],LR):-
+    verificarOpt2(B, LR).
+
+verificarOpt(_,Length,LR):-
+    Length = 0,
+    LR = [].
+
+verificarOpt(Opt,Length,_):-
+    Length = 1,
+    Opt.
+
+verificarOpt(A,Length,LR):-
+    Length >= 2,
+    verificarOpt2(A,LR),
+    LR.
+
+
+flow(Id, Namemsg, Option, Flow):-
+    length(Option,L),
+    verificarOpt(Option,L,LR),
+    write(LR),
+    Flow = [Id, Namemsg, LR].
+

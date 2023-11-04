@@ -1,6 +1,5 @@
 :- include("tda-option").
 
-carP([A|_],A).
 
 my_append([], L, L).
 
@@ -10,30 +9,20 @@ my_append([A|B],L2,[A|R]):-
 my_append(A,L2,[A|R]):-
     my_append([], L2,R).
 
+revisar(_,L,L):-
+    L = [].
 
-revisar(_,[],_):-
+revisar(Code,[A|B],[A|R]):-
+    getcodeOpt(A,A1),
+    number(A1),
+    not(Code = A1),
+    revisar(code, B, R),
     !.
 
-revisar(Code,[A],A):-
-    getcodeOpt(A, A1),
-    number(A1),
-    not(Code = A1).
-
-revisar(Code, [A|B], LR):-
-    getcodeOpt(A, A1),
-    number(A1),
-    not(B = LR),
-    not(Code = A1),
-    my_append(LR, A, L2),
-    revisar(Code, B, L2).
-
-revisar(Code, [_|B], LR):-
+revisar(Code,[_|B],LR):-
     revisar(Code,B,LR).
 
-
 verificarOpt([],[]).
-
-verificarOpt([A],[A]).
 
 verificarOpt([A|B],[A|R]):-
     getcodeOpt(A,A1),
@@ -41,11 +30,21 @@ verificarOpt([A|B],[A|R]):-
     verificarOpt(L2,R).
 
 
-getIfFlow([A|_],A).
+getIdFlow([A|_],A).
 getNamemsg([_,B|_],B).
 getOptionsFlow([_,_,C], C).
+
+flowAddOption(A,Option,Flow2):-
+    getOptionsFlow(A,Opt),
+    getIdFlow(A,Id),
+    getNamemsg(A,Namemsg),
+    my_append(Opt,[Option],LR),
+    verificarOpt(LR,L2),
+    Flow2 = [Id,Namemsg,L2].
+
 
 flow(Id, Namemsg, Option, Flow):-
     verificarOpt(Option,LR),
     Flow = [Id, Namemsg, LR].
+
 

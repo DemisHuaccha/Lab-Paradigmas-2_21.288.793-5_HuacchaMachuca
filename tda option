@@ -1,13 +1,26 @@
-ver-code-option([A|_]):-
-    A.
+getcodeOpt([A|_], A):-
+    number(A).
+
+getmessageOpt([A,B|_], B):-
+    number(A),
+    string(B).
+
+getcodelinkOpt([A,B,C|_], C):-
+    number(A),
+    string(B),
+    number(C).
+
+getflowcodelinkOpt([A,B,C,D|_], D):-
+    number(A),
+    string(B),
+    number(C),
+    number(D).
+
+getkeywordOpt([A,B,C,D,E], E):-
+    number(A),
+    string(B),
+    number(C),
+    number(D).
 
 option(CODE, MESSAGE, CODELINK, FLOWCODELINK, KEYWORDS, OPTION):-
-    OPTION = [CODE, MESSAGE, CODELINK, FLOWCODELINK, KEYWORDS, OPTION],
-    call(ver-code-option,OPTION).
-
-
-%no-repetido([A|B]):-
-
-
-flow(Id, Name-msg, Option, Flow):-
-    Flow = [Id, Name-msg, Option, Flow].
+    OPTION = [CODE, MESSAGE, CODELINK, FLOWCODELINK, KEYWORDS].

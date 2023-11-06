@@ -1,26 +1,17 @@
-getcodeOpt([A|_], A):-
-    number(A).
+getcode([A|_], A).   %getCode es un get que sirve para TDA option, TDA flow y TDA Chatbots.
 
-getmessageOpt([A,B|_], B):-
-    number(A),
-    string(B).
+getmessageOpt([_,B|_], B).
 
-getcodelinkOpt([A,B,C|_], C):-
-    number(A),
-    string(B),
-    number(C).
+getcodelinkOpt([_,_,C|_], C).
 
-getflowcodelinkOpt([A,B,C,D|_], D):-
-    number(A),
-    string(B),
-    number(C),
-    number(D).
+getflowcodelinkOpt([_,_,_,D|_], D).
 
-getkeywordOpt([A,B,C,D,E], E):-
-    number(A),
-    string(B),
-    number(C),
-    number(D).
+getkeywordOpt([_,_,_,_,E], E).
 
 option(CODE, MESSAGE, CODELINK, FLOWCODELINK, KEYWORDS, OPTION):-
     OPTION = [CODE, MESSAGE, CODELINK, FLOWCODELINK, KEYWORDS].
+
+
+
+
+

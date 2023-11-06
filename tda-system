@@ -1,0 +1,19 @@
+:-include("tda-chatbot").
+
+verificarChatbots([],[]).
+
+verificarChatbots([A|B],[A|R]):-
+    getcode(A,A1),
+    revisar(A1,B,L2),  %revisar es una funcion que revisa los Id de todos los chatbots mediante recurcion natural
+    verificarChatbots(L2,R).
+
+
+getNameSystem([A|_],A).
+
+getInialChatbotCodelink([_,B|_],B).
+
+getChatbotsSystem([_,_,C],C).
+
+system(Name, InitialChatbotCodelink,Chatbots,System):-
+    verificarChatbots(Chatbots,LR),
+    System =[Name,InitialChatbotCodelink,LR].

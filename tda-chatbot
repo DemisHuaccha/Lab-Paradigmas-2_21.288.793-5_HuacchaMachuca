@@ -1,44 +1,23 @@
-:-include("tda-option").
 :-include("tda-flow").
-
-
-
-
-revisarIdFlow([],L,L):-
-    L = [].
-revisarIdFlow(Id,[A|B],[A|R]):-
-    getIdFlow(A,A1),
-    not(Id = A1),
-    revisar(Id,B,R),
-    !.
-revisarIdFlow(Id,[_|B],LR):-
-    revisarIdFLow(Id,B,LR).
 
 verificarFlow([],[]).
 
 verificarFlow([A|B],[A|R]):-
-    getIdFlow(A,A1),
+    getcode(A,A1),
     revisar(A1,B,L2),
     verificarFlow(L2,R).
 
 
 
-getIdChatbot([A|_],A):-
-    number(A).
-getNameChatbot([_,B|_],B):-
-    string(B).
-getWelcomeMessageChatbot([_,_,C|_],C):-
-    string(c).
-getStarFlowChatbot([_,_,_,D|_],D):-
-    number(D).
-getFlowsChatbot([A,B,C,D,E],E):-
-    number(A),
-    string(B),
-    string(C),
-    number(D).
+%getIdChatbot([A|_],A), getcode cumple con esta funcion.
+
+getNameChatbot([_,B|_],B).
+getWelcomeMessageChatbot([_,_,C|_],C).
+getStarFlowChatbot([_,_,_,D|_],D).
+getFlowsChatbot([_,_,_,_,E],E).
 
 chatbotAddFlow(Chatbot,Flow,Chatbot2):-
-    getIdChatbot(Chatbot,A),
+    getcode(Chatbot,A),
     getNameChatbot(Chatbot,B),
     getWelcomeMessageChatbot(Chatbot,C),
     getStarFlowChatbot(Chatbot,D),
@@ -47,7 +26,7 @@ chatbotAddFlow(Chatbot,Flow,Chatbot2):-
     verificarFlow(LR,L2),
     Chatbot2=[A,B,C,D,L2].
 
-
 chatbot(Id,Name,WelcomeMessage,StartFlowId,Flows,Chatbot):-
     verificarFlow(Flows,Flows2),
     Chatbot = [Id,Name,WelcomeMessage,StartFlowId,Flows2].
+

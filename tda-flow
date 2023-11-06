@@ -1,6 +1,5 @@
 :- include("tda-option").
 
-
 my_append([], L, L).
 
 my_append([A|B],L2,[A|R]):-
@@ -9,11 +8,11 @@ my_append([A|B],L2,[A|R]):-
 my_append(A,L2,[A|R]):-
     my_append([], L2,R).
 
-revisar(_,L,L):-
+revisar(_,L,L):-  %funcion revisar sirve solo para lista de options,flow y chatbots.
     L = [].
 
 revisar(Code,[A|B],[A|R]):-
-    getcodeOpt(A,A1),
+    getcode(A,A1),
     number(A1),
     not(Code = A1),
     revisar(code, B, R),
@@ -25,26 +24,26 @@ revisar(Code,[_|B],LR):-
 verificarOpt([],[]).
 
 verificarOpt([A|B],[A|R]):-
-    getcodeOpt(A,A1),
+    getcode(A,A1),
     revisar(A1, B, L2),
     verificarOpt(L2,R).
 
 
-getIdFlow([A|_],A).
+%getIdFlow([A|_],A).  getcode cumple con esta funcion.
+
 getNamemsg([_,B|_],B).
 getOptionsFlow([_,_,C], C).
 
 flowAddOption(A,Option,Flow2):-
     getOptionsFlow(A,Opt),
-    getIdFlow(A,Id),
+    getcode(A,Id),
     getNamemsg(A,Namemsg),
     my_append(Opt,[Option],LR),
     verificarOpt(LR,L2),
     Flow2 = [Id,Namemsg,L2].
 
 
-flow(Id, Namemsg, Option, Flow):-
+flow(Id, Namemsg, Option, Flow):-  %Options tiene que entregarse en una lista: :"[O1,O2]" o "[]"
     verificarOpt(Option,LR),
     Flow = [Id, Namemsg, LR].
-
 

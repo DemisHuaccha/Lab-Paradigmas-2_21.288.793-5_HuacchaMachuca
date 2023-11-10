@@ -38,7 +38,7 @@ flowAddOption(A,Option,Flow2):-
     getOptionsFlow(A,Opt),
     getcode(A,Id),
     getNamemsg(A,Namemsg),
-    my_append(Opt,[Option],LR),
+    my_append([Option],Opt,LR),
     verificarOpt(LR,L2),
     Flow2 = [Id,Namemsg,L2].
 

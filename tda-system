@@ -4,16 +4,67 @@ verificarChatbots([],[]).
 
 verificarChatbots([A|B],[A|R]):-
     getcode(A,A1),
-    revisar(A1,B,L2),  %revisar es una funcion que revisa los Id de todos los chatbots mediante recurcion natural
+    revisar(A1,B,L2),
     verificarChatbots(L2,R).
-
 
 getNameSystem([A|_],A).
 
-getInialChatbotCodelink([_,B|_],B).
+getInitialChatbotCodelink([_,B|_],B).
 
 getChatbotsSystem([_,_,C],C).
+
+systemAddChatbots(System,Chatbot,S2):-
+    getNameSystem(System,Name),
+    getInitialChatbotCodelink(System,Codelink),
+    getChatbotsSystem(System,Chatbots),
+    my_append([Chatbot],Chatbots,L2),
+    verificarChatbots(L2,LR),
+    S2 = [Name,Codelink,LR].
+
+%----------------User-----------------%
+getIdUser([A|_],A).
+
+%-------------------------------------%
+revisarIdUser(_,L,L):-  %funcion revisar sirve solo para lista de options,flow y chatbots.
+    L = [].
+
+revisarIdUser(Id,[A|B],[A|R]):-
+    getcode(A,A1),
+    string(A1),
+    not(Id = A1),
+    revisarIdUser(code, B, R),
+    !.
+
+revisarIdUser(Id,[_|B],LR):-
+    revisarIdUser(Id,B,LR).
+
+verificarIdUser([A|B],[A|R]):-
+    getIdUser(A,A1),
+    string(A1),
+    revisarIdUser(A1,B,L2),
+    verificarIdUser(L2,R).
+
+systemAddUser([A|B],User,SR):- %B es la lista de users
+    getIdUser(B,Id),           %getIdUser entrega el primer elemento de la lista
+    string(Id),
+    my_append([User],B,L2),    %concatenar el nuevo usuario con la lista de usuarios
+    verificarIdUser(L2,LR),    %revisar que la lista no tenga ningun usuario repetido
+    SR = [[A|B],LR].
+
+
+
+revisarLogin([_,B],B):-
+    not(string(B)).
+
+systemLogin(System,User,S2):-
+    revisarLogin(System),
+    S2=[System,User].
+
+systemLogout([A,B],S):-
+    string(B),
+    S=[A].
 
 system(Name, InitialChatbotCodelink,Chatbots,System):-
     verificarChatbots(Chatbots,LR),
     System =[Name,InitialChatbotCodelink,LR].
+

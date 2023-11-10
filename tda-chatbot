@@ -22,7 +22,7 @@ chatbotAddFlow(Chatbot,Flow,Chatbot2):-
     getWelcomeMessageChatbot(Chatbot,C),
     getStarFlowChatbot(Chatbot,D),
     getFlowsChatbot(Chatbot,F),
-    my_append(F,[Flow],LR),
+    my_append([Flow],F,LR),
     verificarFlow(LR,L2),
     Chatbot2=[A,B,C,D,L2].
 

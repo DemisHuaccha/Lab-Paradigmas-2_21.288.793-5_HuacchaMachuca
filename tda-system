@@ -1,6 +1,7 @@
 :-include("tda-chatbot").
 
 my_car([A|_],A).
+my_cdr([_|B],B).
 
 verificarChatbots([],[]).
 
@@ -22,7 +23,7 @@ getUserList([_,_,_,D|_],D).
 getLoginId([_,_,_,_,E],E1):-
     my_car(E,E1).
 
-systemAddChatbots([Name,Codelink,Chatbots|S1],Chatbot,S):-
+systemAddChatbot([Name,Codelink,Chatbots|S1],Chatbot,S):-
     my_append([Chatbot],Chatbots,L2),
     verificarChatbots(L2,LR),
     S2 = [Name,Codelink,LR],
@@ -33,74 +34,91 @@ getIdUser([A|_],A).
 
 getfirstUser([A|_],A).
 
-revisarIdUser(_,L,L):-
-    L = [].
+revisarIdUser(_,[],[]).
 
 revisarIdUser(Id,[A|B],[A|R]):-
-    getcode(A,A1),
-    string(A1),
-    not(Id = A1),
+    string(A),
+    not(Id = A),
     revisarIdUser(code, B, R),
     !.
 
 revisarIdUser(Id,[_|B],LR):-
     revisarIdUser(Id,B,LR).
 
+verificarIdUser([],[]).
+
 verificarIdUser([A|B],[A|R]):-
-    getIdUser(A,A1),
-    string(A1),
-    revisarIdUser(A1,B,L2),
+    string(A),
+    revisarIdUser(A,B,L2),
     verificarIdUser(L2,R).
 
 revisarSituacion([_|B]):-   %Funcion que revisa que no haya un usuario logeado
-    B is [].
+    B = [].
 
 revisarSituacion2([A|B],LR):-        %Funcion que revisa que haya un usuario logeado para deslogearlo
-    my_car(B,B1),
-    string(B1),
-    LR = [A].
+    not(B = []),
+    LR = A.
 
 revisarLogin([_,_,_|D]):-
-   not(D is []),
+   not(D = []),
    revisarSituacion(D).
+
+existe([],_):-!.
+
+existe([A|_],User):-
+    A = User.
+existe([_|B],User):-
+    existe(B,User).
+
+buscarUser([_,_,_|D],User):-
+    not(D=[]),
+    my_cdr(D,D1),
+    D1 = [],
+    existe(D,User).
+
+buscarUser([_,_,_|D],User):-
+    not(D=[]),
+    my_cdr(D,D1),
+    not(D1 = []),
+    my_car(D,D2),
+    existe(D2,User).
 
 %---------------------------------------%
 
-agregarUser([A|_],User,[User]):-  % situacion donde se agrega un user por primera vez
-    A is [].
+agregarUser([],User,[User]).   % situacion donde se agrega un user por primera
 
-agregarUser([A|B],User,LR):-      % situacion donde se agrega un user a una lista de user previamente registrados
-    string(A),
-    my_append([A|B],[User],L2),
-    verificarIdUser(L2,LR).
 
-agregarUSer([A|B],User,LR):-      % situacion donde se agrega un user, cuando ya hay un user logeado
-    not(string(A)),
-    not(A is []),
-    my_append(A,[User],L2), %L2 es la lista con el usuario agregado
+agregarUser([A|B],User,LR):-      % situacion donde se agrega un user a una lista de user previamente registrados,
+    B =[],
+    my_append(A,[User],L2),
     verificarIdUser(L2,L3),
-    LR = [L3,B].     %LR es la lista que contiene a la lista de usuarios y el user logeado
+    LR = L3.
+
+agregarUser([A|B],User,LR):-      % situacion donde se agrega un user a una lista de user previamente registrados,
+    not(B =[]),
+    my_append(A,[User],L2),
+    verificarIdUser(L2,L3),
+    LR = [L3|B].
 
 
 
 systemAddUser([A,B,C|D],User,SR):-
-
     agregarUser(D,User,LR),  %funcion que agrega el usuario a la lista de usuario tomando en cuenta las situaciones y cumpliendo con la unicidad de users
-    Temp=[A,B,C],
-    my_append(Temp,LR,SR).
+    SR=[A,B,C,LR].
+
+
 
 systemLogin(System,User,S2):-
     revisarLogin(System),
-    my_append(system,[User],S2).
+    buscarUser(System,User),
+    S2=[System,User].
 
-systemLogout([A,B,C|D],S):-
-    S1=[A,B,C],
-    revisarSituacion2(D,D2),
-    my_append(S1,D2,S).
+systemLogout([A,B,C|D],S):-   %D es [[Users],UserLog].
+    revisarSituacion2(D,D2), % entrega lista de solo usuarios registrados
+    S=[A,B,C,D2].
 
 
 system(Name, InitialChatbotCodelink,Chatbots,System):-
     verificarChatbots(Chatbots,LR),
     System =[Name,InitialChatbotCodelink,LR].
-
 

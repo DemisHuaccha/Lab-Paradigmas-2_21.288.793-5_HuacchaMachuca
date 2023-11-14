@@ -106,7 +106,9 @@ systemAddUser([A,B,C|D],User,SR):-
     agregarUser(D,User,LR),  %funcion que agrega el usuario a la lista de usuario tomando en cuenta las situaciones y cumpliendo con la unicidad de users
     SR=[A,B,C,LR].
 
-
+systemAddHistorial([A,B,C,D|E],User,SR):- %systemAddhistorial es una funcion que se debe agregar a systemAddUser para agregar el historial al system, funcion no implementada completamente debido a la falta de tiempo
+    tdahistorial(User,E,LR),
+    SR=[A,B,C,D,LR].
 
 systemLogin(System,User,S2):-
     revisarLogin(System),

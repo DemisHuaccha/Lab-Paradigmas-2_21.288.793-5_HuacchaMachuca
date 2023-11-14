@@ -1,7 +1,5 @@
 :-include("tda-chatbot").
-
-my_car([A|_],A).
-my_cdr([_|B],B).
+:-include("tda-user").
 
 verificarChatbots([],[]).
 

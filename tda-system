@@ -113,10 +113,11 @@ systemLogin(System,User,S2):-
     buscarUser(System,User),
     S2=[System,User].
 
+/*
 systemLogout([A,B,C|D],S):-   %D es [[Users],UserLog].
     revisarSituacion2(D,D2), % entrega lista de solo usuarios registrados
     S=[A,B,C,D2].
-
+*/
 
 system(Name, InitialChatbotCodelink,Chatbots,System):-
     verificarChatbots(Chatbots,LR),

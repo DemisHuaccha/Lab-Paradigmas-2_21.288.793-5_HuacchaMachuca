@@ -1,0 +1,21 @@
+my_car([A|_],A).
+my_cdr([_|B],B).
+
+buscarUser(User,[A|B],Accion,[AR|B]):-
+    my_car(A,A1),
+    string(A1),
+    User = A,
+    append(A,Accion,AR).
+    %Falta comprobar que agregar Accion al historial funcione correctamente
+
+buscarUser(User,[_|B],Accion,LR):-
+    buscarUser(User,B,Accion,LR).
+
+actualizarHistorial(User,Historial,Accion,NuevoHistorial):-
+    buscarUser(User,Historial,Accion,NuevoHistorial).
+
+tdahistorial(User,[],LR):-
+    LR=[User,[]].
+
+tdahistorial(User,[A|B],[A|R]):-
+    tdahistorial(User,B,R).
